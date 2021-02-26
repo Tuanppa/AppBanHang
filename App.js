@@ -7,6 +7,7 @@ import {
   Text,
   StatusBar,
   Button,
+  useWindowDimensions,
 } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -34,15 +35,29 @@ function HomeScreen({ navigation }) {
 }
 
 const Drawer = createDrawerNavigator();
-const App: () => React$Node = () => {
+
+function MyDrawer() {
+  const dimensions = useWindowDimensions();
+  const isLargeScreen = dimensions.width <= 768;
+  return (
+    <Drawer.Navigator 
+      //initialRouteName="Home"
+      openByDefault
+      drawerType={isLargeScreen ? 'back' : 'permanent' }
+      drawerStyle={isLargeScreen ? null : { width: '100%' }}
+      overlayColor="transparent"
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Notifications" title="Lịch làm việc" component={NotificationsScreen} />
+      <Drawer.Screen name="Phiếu báo quân số" component={NotificationsScreen} />
+      <Drawer.Screen name="Lịch tuần" component={NotificationsScreen} />
+    </Drawer.Navigator>
+  );
+}
+export default function App() {
   return (
   <NavigationContainer>
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Notifications" component={NotificationsScreen} />
-    </Drawer.Navigator>
+    <MyDrawer />
   </NavigationContainer>
   );
-};
-
-export default App;
+}
